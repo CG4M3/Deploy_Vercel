@@ -1,11 +1,29 @@
+
 <?php
 
-// Paksa Laravel menggunakan folder /tmp untuk menulis cache & session di serverless Vercel
-$storagePath = '/tmp/storage/framework';
-if (!is_dir($storagePath . '/views')) {
-    mkdir($storagePath . '/views', 0755, true);
-}
-putenv("VIEW_COMPILED_PATH={$storagePath}/views");
+// Direktori penyimpanan sementara untuk Vercel
+$storagePath = '/tmp/laravel-storage';
 
-// Arahkan ke file public bawaan Laravel
+$directories = [
+    $storagePath . '/app/private',
+    $storagePath . '/app/public',
+    $storagePath . '/framework/cache/data',
+    $storagePath . '/framework/sessions',
+    $storagePath . '/framework/views',
+    $storagePath . '/logs',
+];
+
+// Buat seluruh direktori yang dibutuhkan Laravel
+foreach ($directories as $directory) {
+    if (!is_dir($directory)) {
+        mkdir($directory, 0755, true);
+    }
+}
+
+// Arahkan storage Laravel ke direktori sementara
+$_ENV['LARAVEL_STORAGE_PATH'] = $storagePath;
+$_SERVER['LARAVEL_STORAGE_PATH'] = $storagePath;
+putenv("LARAVEL_STORAGE_PATH={$storagePath}");
+
+// Jalankan Laravel
 require __DIR__ . '/../public/index.php';
