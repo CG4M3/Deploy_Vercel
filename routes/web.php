@@ -6,5 +6,6 @@ Route::get('/', function () {
     return view('webSekolahV2.beranda');
 });
 Route::get('/contoh', function () {
-    return view('webSekolahV2.contoh');
+    return response('TES LARAVEL BERHASIL', 200)
+        ->header('Content-Type', 'text/plain');
 });
